@@ -22,6 +22,8 @@
 
           <router-link to="/create-document" class="navbar-item">Create Doc</router-link>
 
+          <router-link to="/compress-document" class="navbar-item">Compress Doc</router-link>
+
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="/documentation/overview/start/">
               More
