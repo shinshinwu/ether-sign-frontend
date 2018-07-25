@@ -20,9 +20,11 @@
 
           <router-link to="/profile" class="navbar-item">Profile</router-link>
 
+          <router-link to="/create-document" class="navbar-item">Create Doc</router-link>
+
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="/documentation/overview/start/">
-              Docs
+              More
             </a>
             <div class="navbar-dropdown is-boxed">
               <a class="navbar-item" href="/documentation/overview/start/">

@@ -1,10 +1,9 @@
 // ropsten contract address setting
-const address = '0xa88994c245da3000d1ca2368b23aa530be1ec7ff';
+const address = '0x704448aaff62c1ae2665cafbb641b5826672168d';
 
 // ganache contract address
 // const address = '0x0249e50e1b83cae3bb3f16604c7de4cecc260886';
-// local ganache contract address setting
-// const address = '0x51e3eec8c02e09800cb56b7a8b7b4d567db6b2db';
+
 var ABI = [
     {
       "constant": false,
@@ -13,6 +12,20 @@ var ABI = [
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "documentCounter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -71,17 +84,27 @@ var ABI = [
       "inputs": [
         {
           "indexed": true,
-          "name": "_signer",
+          "name": "signer",
           "type": "address"
         },
         {
           "indexed": true,
-          "name": "_delegate",
+          "name": "delegate",
           "type": "address"
         },
         {
+          "indexed": true,
+          "name": "documentId",
+          "type": "uint256"
+        },
+        {
           "indexed": false,
-          "name": "_string",
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "content",
           "type": "string"
         },
         {
@@ -98,12 +121,39 @@ var ABI = [
       "inputs": [
         {
           "indexed": true,
-          "name": "_signer",
+          "name": "signer",
           "type": "address"
         },
         {
           "indexed": true,
-          "name": "_delegate",
+          "name": "delegate",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "documentId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "time",
+          "type": "uint64"
+        }
+      ],
+      "name": "SignerAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "signer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "delegate",
           "type": "address"
         },
         {
@@ -120,12 +170,12 @@ var ABI = [
       "inputs": [
         {
           "indexed": true,
-          "name": "_signer",
+          "name": "signer",
           "type": "address"
         },
         {
           "indexed": true,
-          "name": "_delegate",
+          "name": "delegate",
           "type": "address"
         },
         {
@@ -170,7 +220,11 @@ var ABI = [
       "constant": false,
       "inputs": [
         {
-          "name": "_input",
+          "name": "_title",
+          "type": "string"
+        },
+        {
+          "name": "_content",
           "type": "string"
         },
         {
@@ -179,6 +233,24 @@ var ABI = [
         }
       ],
       "name": "signDocument",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_documentId",
+          "type": "uint256"
+        },
+        {
+          "name": "_signer",
+          "type": "address"
+        }
+      ],
+      "name": "addSigner",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
