@@ -81,6 +81,8 @@ export default {
     }).then(() => {
       this.$store.dispatch('getDelegate')
     }).then(() => {
+      this.$store.dispatch('getUserEvents')
+    }).then(() => {
       this.loading = false
     })
   }

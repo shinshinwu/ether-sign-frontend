@@ -4,7 +4,9 @@ import { getWeb3,
          pollWeb3,
          getContract,
          getDelegate,
-         setDelegate
+         setDelegate,
+         signDocument,
+         getUserEvents
        } from '../util'
 
 Vue.use(Vuex)
@@ -38,6 +40,15 @@ export default new Vuex.Store({
     },
     registerDelegateAddress (state, payload) {
       state.delegateAddress = payload
+    },
+    registerTransaction (state, payload) {
+      state.transactions.push(payload)
+    },
+    registerUserTransactions (state, payload) {
+      state.transactions = payload
+      state.transactions.sort(function (a, b) {
+        return b.blockNumber - a.blockNumber;
+      })
     }
   },
   actions: {
@@ -62,6 +73,12 @@ export default new Vuex.Store({
     },
     async setDelegate({state, commit}, address) {
       commit('registerDelegateAddress', await setDelegate(state, address))
+    },
+    async signDocument({state, commit}, args) {
+      commit('registerTransaction', await signDocument(state, args))
+    },
+    async getUserEvents({state, commit}) {
+      commit('registerUserTransactions', await getUserEvents(state))
     }
   }
 })

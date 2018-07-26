@@ -2,8 +2,6 @@
   <div class="columns">
     <div class="column">
 
-      <h3>Enter Document To Be Compressed Below</h3>
-
       <div class="columns">
         <div class="column">
           <div class="control" id="editor">
@@ -19,13 +17,36 @@
       </div>
 
       <button class="button is-link" @click="compressInput">Generate Share URL</button>
-      <button class="button" @click="signDoc">Sign Doc</button>
 
       <div class="content url-output">
-        <h4>Share URL Output</h4>
+        <h3>Share URL Output</h3>
         <blockquote style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ this.compressedOutput }}</blockquote>
         <a :href="compressedURL" target="_blank" style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ compressedURL }}</a>
       </div>
+
+      <div class="content"><h3>Document Signing</h3></div>
+
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">Document Title</label>
+            <div class="control">
+              <input class="input" type="text" v-model="title" placeholder="Document Title">
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Signer Address</label>
+            <div class="control">
+              <input class="input" type="text" v-model="signerAddress" placeholder="Enter Signer ETH Address">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="button is-info" @click="signDoc">Sign Doc</button>
 
     </div>
   </div>
@@ -38,6 +59,8 @@ export default {
   name: 'CreateDocument',
   data () {
     return {
+      title: null,
+      signerAddress: null,
       uncompressedInput: '# hello there',
       compressedOutput: 'Nada yet!'
     }
@@ -66,7 +89,15 @@ export default {
     },
 
     signDoc() {
-      // communicate with contract
+      var filtered = this.compiledMarkdown.replace(/[ |\t]+/g, " ").replace(/> +</g, "> <")
+      LZMA.compress(filtered, 9, (result, error) => {
+        // do stuff with output
+        if (error) console.error(error);
+        var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(result)));
+
+        var args = {title: this.title, content: base64String, signer: this.signerAddress}
+        this.$store.dispatch('signDocument', args)
+      })
     }
   }
 }
@@ -74,7 +105,9 @@ export default {
 
 <style scoped>
 
-  h3 {
+  .content>h3 {
+    border-top: 1px dashed #b7b7b7;
+    padding-top: 30px;
     margin-bottom: 30px;
   }
 

@@ -7,6 +7,8 @@ import pollWeb3 from './pollWeb3'
 import getContract from './getContract'
 import getDelegate from './contracts/getDelegate'
 import setDelegate from './contracts/setDelegate'
+import signDocument from './contracts/signDocument'
+import getUserEvents from './contracts/getUserEvents'
 
 export {
   getWeb3,
@@ -14,5 +16,7 @@ export {
   getContract,
   getDelegate,
   setDelegate,
+  signDocument,
+  getUserEvents,
   NETWORKS
 }
