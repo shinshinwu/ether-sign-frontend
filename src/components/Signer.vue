@@ -1,0 +1,87 @@
+<template>
+  <div class="content">
+    <h3>Signatures</h3>
+    <p>This document has been signed by {{ signers }}</p>
+
+    <div v-if="signingEligible">
+      <h3>Add Your Signature</h3>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" v-model="signerAddress" placeholder="Enter Signer ETH Address">
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" @click="addSigner(signerAddress)">Add Your Signature</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showTransactions">
+      <h3>Document Transactions</h3>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Block #</th>
+              <th>Event</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <TransactionFeed v-if="(signers.length > 1)" v-for="transaction in this.$store.state.document.additionalSigners" :transaction="transaction" :key="transaction.id" />
+            <TransactionFeed :transaction="this.$store.state.document" :key="this.$store.state.document.returnValues.documentId" />
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+import TransactionFeed from './TransactionFeed.vue'
+import { mapActions } from 'vuex'
+
+export default {
+  name: 'Signer',
+  components: { TransactionFeed },
+  data () {
+    return {
+      signerAddress: this.$store.state.web3.coinbase
+    }
+  },
+
+  computed: {
+    signers() {
+      var signers = [this.$store.state.document.returnValues.signer.toLowerCase()]
+
+      this.$store.state.document.additionalSigners.forEach(function(signerEvent) {
+        signers.push(signerEvent.returnValues.signer.toLowerCase())
+      })
+
+      return (signers.join(', '))
+    },
+    signingEligible() {
+      if (typeof this.$store.state.web3.coinbase == 'undefined') {
+        return false
+      } else {
+        return (this.signers.indexOf(this.$store.state.web3.coinbase.toLowerCase()) == -1)
+      }
+    },
+    showTransactions() {
+      return (this.$store.state.document !== null)
+    }
+  },
+
+  methods: {
+    ...mapActions(['addSigner'])
+  }
+
+}
+</script>

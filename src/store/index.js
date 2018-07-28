@@ -6,7 +6,10 @@ import { getWeb3,
          getDelegate,
          setDelegate,
          signDocument,
-         getUserEvents
+         getUserEvents,
+         getDocument,
+         addSigner,
+         getAdditionalSigners
        } from '../util'
 
 Vue.use(Vuex)
@@ -19,6 +22,7 @@ export default new Vuex.Store({
     web3: {},
     delegateAddress: null,
     contractInstance: null,
+    document: null,
     transactions: []
   },
   mutations: {
@@ -47,6 +51,15 @@ export default new Vuex.Store({
     registerUserTransactions (state, payload) {
       state.transactions = payload
       state.transactions.sort(function (a, b) {
+        return b.blockNumber - a.blockNumber;
+      })
+    },
+    registerDocument (state, payload) {
+      state.document = payload
+    },
+    registerDocumentTransaction (state, payload) {
+      state.document.additionalSigners.push(payload)
+      state.document.additionalSigners.sort(function (a, b) {
         return b.blockNumber - a.blockNumber;
       })
     }
@@ -79,6 +92,15 @@ export default new Vuex.Store({
     },
     async getUserEvents({state, commit}) {
       commit('registerUserTransactions', await getUserEvents(state))
+    },
+    async getDocument({state, commit}, id) {
+      let events = await getDocument(state, id)
+      let additionalSigners = await getAdditionalSigners(state, events[0].returnValues.documentId)
+      let payload = Object.assign({}, events[0], { additionalSigners: additionalSigners })
+      commit('registerDocument', payload)
+    },
+    async addSigner({state, commit}, signer) {
+      commit('registerDocumentTransaction', await addSigner(state, signer))
     }
   }
 })

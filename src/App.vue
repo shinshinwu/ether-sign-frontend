@@ -75,7 +75,7 @@
 export default {
   name: 'App',
 
-  created () {
+  beforeCreate () {
     this.$store.dispatch('registerWeb3').then(() => {
       this.$store.dispatch('getContractInstance')
     }).then(() => {

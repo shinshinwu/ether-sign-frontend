@@ -9,6 +9,9 @@ import getDelegate from './contracts/getDelegate'
 import setDelegate from './contracts/setDelegate'
 import signDocument from './contracts/signDocument'
 import getUserEvents from './contracts/getUserEvents'
+import getDocument from './contracts/getDocument'
+import addSigner from './contracts/addSigner'
+import getAdditionalSigners from './contracts/getAdditionalSigners'
 
 export {
   getWeb3,
@@ -18,5 +21,8 @@ export {
   setDelegate,
   signDocument,
   getUserEvents,
+  getDocument,
+  addSigner,
+  getAdditionalSigners,
   NETWORKS
 }
