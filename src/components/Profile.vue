@@ -1,8 +1,11 @@
 <template>
   <div class="container">
     <p>Coinbase: {{ this.$store.state.web3.coinbase }}</p>
-    <p>My Delegate Address: {{ delegateAddress }}</p>
-
+    <p v-if="hasDelegate">
+      My Delegate Address: {{ delegateAddress }}
+      <button class="button is-danger" @click="removeDelegate">Remove Delegate</button>
+    </p>
+    <p v-if="isDelegateFor">I am delegates for {{ delegatesFor }}</p>
     <div class="field">
       <label class="label">Set Delegate</label>
       <div class="control">
@@ -64,9 +67,61 @@ export default {
     hasTransactions() {
       return (this.$store.state.transactions.length > 0)
     },
+
+    delegatesFor() {
+      let addedAsDelegate = {}
+      let removedAsDelegate = {}
+
+      let asDelegates = []
+      // get all events added as delegate
+      this.$store.state.transactions.forEach((transaction) => {
+        let delegate = transaction.returnValues.delegate
+        let signer = transaction.returnValues.signer
+
+        if ((transaction.event == 'Authorized') && (delegate.toLowerCase() == this.$store.state.web3.coinbase.toLowerCase())) {
+          if (typeof addedAsDelegate[signer] == 'undefined') {
+            addedAsDelegate[signer] = 1
+          } else {
+            addedAsDelegate[signer] ++
+          }
+
+        // get all events removed as delegate
+        } else if ((transaction.event == 'Deauthorized') && (delegate.toLowerCase() == this.$store.state.web3.coinbase.toLowerCase())) {
+          if (typeof removedAsDelegate[signer] == 'undefined') {
+            removedAsDelegate[signer] = 1
+          } else {
+            removedAsDelegate[signer] ++
+          }
+        }
+      })
+
+      // remove the entries approriatly, in case a person is added and removed as delegate multiple times, we need to calculate if they are still delegate by tally up the times
+
+      Object.entries(addedAsDelegate).forEach(
+        ([key, count]) => {
+          if (typeof removedAsDelegate[key] !== 'undefined') {
+            if ((count - removedAsDelegate[key]) > 0) {
+              asDelegates.push(key)
+            }
+          } else {
+            asDelegates.push(key)
+          }
+        }
+      );
+
+      return (asDelegates.join(' ,'))
+
+    },
     ...mapState([
       'delegateAddress'
-    ])
+    ]),
+
+    hasDelegate() {
+      return (this.delegateAddress != "0x0000000000000000000000000000000000000000")
+    },
+    isDelegateFor() {
+      return (this.hasTransactions && (this.delegatesFor !== ''))
+    }
   },
 
   methods: {
@@ -74,7 +129,8 @@ export default {
       this.fetchedDelegate = await this.$store.dispatch('getDelegate', this.inputAddress)
     },
     ...mapActions([
-      'setDelegate'
+      'setDelegate',
+      'removeDelegate'
     ]),
   }
 }

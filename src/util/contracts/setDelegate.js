@@ -3,7 +3,11 @@ const setDelegate = (state, address) => {
     state.contractInstance().methods.authorize(address).send({from: state.web3.coinbase}
     ).on('receipt', (receipt) => {
       console.log('received the tx receipt')
-      resolve(address)
+      if (typeof receipt.events.Deauthorized !== 'undefined') {
+        resolve([receipt.events.Authorized, receipt.events.Deauthorized])
+      } else {
+        resolve(receipt.events.Authorized)
+      }
     })
   });
 };

@@ -5,6 +5,7 @@ import { getWeb3,
          getContract,
          getDelegate,
          setDelegate,
+         removeDelegate,
          signDocument,
          getUserEvents,
          getDocument,
@@ -46,12 +47,18 @@ export default new Vuex.Store({
       state.delegateAddress = payload
     },
     registerTransaction (state, payload) {
-      state.transactions.push(payload)
-    },
-    registerUserTransactions (state, payload) {
-      state.transactions = payload
+      if (Array.isArray(payload)) {
+        state.transactions = state.transactions.concat(payload)
+      } else {
+        state.transactions.push(payload)
+      }
+
       state.transactions.sort(function (a, b) {
-        return b.blockNumber - a.blockNumber;
+        if ((a.blockNumber == b.blockNumber) && (a.event == 'Deauthorized')) {
+          return 1
+        } else {
+          return b.blockNumber - a.blockNumber;
+        }
       })
     },
     registerDocument (state, payload) {
@@ -85,13 +92,20 @@ export default new Vuex.Store({
       }
     },
     async setDelegate({state, commit}, address) {
-      commit('registerDelegateAddress', await setDelegate(state, address))
+      let transaction = await setDelegate(state, address)
+      commit('registerDelegateAddress', address)
+      commit('registerTransaction', transaction)
+    },
+    async removeDelegate({state, commit}, signer) {
+      let transaction = await removeDelegate(state)
+      commit('registerDelegateAddress', "0x0000000000000000000000000000000000000000")
+      commit('registerTransaction', transaction)
     },
     async signDocument({state, commit}, args) {
       commit('registerTransaction', await signDocument(state, args))
     },
     async getUserEvents({state, commit}) {
-      commit('registerUserTransactions', await getUserEvents(state))
+      commit('registerTransaction', await getUserEvents(state))
     },
     async getDocument({state, commit}, id) {
       let events = await getDocument(state, id)
