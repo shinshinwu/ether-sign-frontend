@@ -1,72 +1,88 @@
 <template>
   <section class="section">
     <div class="container">
-      <div class="columns">
-        <div class="column">
-
-          <div class="columns">
-            <div class="column">
-              <div class="control" id="editor">
-                <textarea v-model="uncompressedInput" class="textarea" placeholder="markdown format"></textarea>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="content">
-                <div v-html="compiledMarkdown"></div>
-              </div>
+      <div class="content">
+        <h1>Create Document</h1>
+        <p>You can create document in the gray input box below. All of the document follow the <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown</a> styling rules so add your sparks! You can preview your document on the right side panel.</p>
+        <hr>
+        <div class="columns">
+          <div class="column">
+            <h4 class="has-text-primary is-italic">Input</h4>
+            <div class="control" id="editor">
+              <textarea v-model="uncompressedInput" class="textarea" placeholder="markdown format"></textarea>
             </div>
           </div>
 
-          <button class="button is-link" @click="compressInput">Generate Share URL</button>
-
-          <div class="content url-output">
-            <h3>Share URL Output</h3>
-            <blockquote style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ this.compressedOutput }}</blockquote>
-            <a :href="compressedURL" target="_blank" style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ compressedURL }}</a>
-          </div>
-
-          <div class="content"><h3>Document Signing</h3></div>
-
-          <div class="columns">
-            <div class="column">
-              <div class="field">
-                <label class="label">Document Title</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="title" placeholder="Document Title">
-                </div>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="field">
-                <label class="label">Signer Address</label>
-                <div class="control">
-                  <input class="input" type="text" v-model="signerAddress" placeholder="Enter Signer ETH Address">
-                </div>
-              </div>
+          <div class="column">
+            <h4 class="has-text-primary is-italic">Output</h4>
+            <div class="content">
+              <div v-html="compiledMarkdown"></div>
             </div>
           </div>
-
-          <button class="button is-info" @click="signDoc">Sign Doc</button>
-
         </div>
+
+        <button class="button is-link is-outlined" @click="compressInput">Compress Document</button>
+        <hr>
+        <div class="content url-output">
+          <h3>Compressed Document</h3>
+          <p>*Note that for large document with very long output, broswer URL has <a href="https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers" target="_blank">character limit</a> which may prohibit the display of the page properly. In that case, you can sign the document first and share the deployed document ID with another user that way.</p>
+          <div v-if="compressedOutput">
+            <blockquote style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ this.compressedOutput }}</blockquote>
+            <a :href="compressedURL" class="button is-info is-outlined" style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">View Document</a>
+          </div>
+          <div v-else>
+            <blockquote>Nothing to see here yet!</blockquote>
+          </div>
+        </div>
+        <hr>
+        <div class="content"><h3>Document Signing</h3></div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Document Title</label>
+              <div class="control">
+                <input class="input" type="text" v-model="title" placeholder="What is the title for your doc?">
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Signer Address</label>
+              <div class="control">
+                <input class="input" type="text" v-model="signerAddress" placeholder="ETH Address of your own or a person you have delegate power for">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="button is-danger is-outlined" @click="signDoc">Create & Sign Document</button>
+
+        <div v-if="hasDoc">
+          <hr>
+          <Signer />
+        </div>
+
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import Signer from './Signer.vue'
 import marked from 'marked'
 
 export default {
   name: 'CreateDocument',
+  components: { Signer },
   data () {
     return {
       title: null,
       signerAddress: null,
-      uncompressedInput: '# hello there',
-      compressedOutput: 'Nada yet!'
+      uncompressedInput: `# Hello there!
+![](https://loading.io/spinners/spookyghost/index.spooky-ghost-ajax-preloader.svg)`,
+      compressedOutput: null
     }
   },
 
@@ -76,12 +92,15 @@ export default {
     },
 
     compressedURL() {
-      return `/#/view?${this.compressedOutput}`
+      return `/#/view?c=${this.compressedOutput}`
+    },
+
+    hasDoc() {
+      return (this.$store.state.document !== null)
     }
   },
 
   methods: {
-
     compressInput() {
       var filtered = this.compiledMarkdown.replace(/[ |\t]+/g, " ").replace(/> +</g, "> <")
       LZMA.compress(filtered, 9, (result, error) => {
@@ -103,6 +122,10 @@ export default {
         this.$store.dispatch('signDocument', args)
       })
     }
+  },
+
+  mounted() {
+    this.$store.state.document = null
   }
 }
 </script>
@@ -110,8 +133,7 @@ export default {
 <style scoped>
 
   .content>h3 {
-    border-top: 1px dashed #b7b7b7;
-    padding-top: 30px;
+    margin-top: 10px;
     margin-bottom: 30px;
   }
 
@@ -119,7 +141,6 @@ export default {
     margin: 0;
     height: 100%;
     color: #333;
-    min-height: 300px;
   }
 
   textarea, #editor div {
@@ -136,6 +157,7 @@ export default {
     font-size: 14px;
     font-family: 'Monaco', courier, monospace;
     padding: 20px;
+    height: 400px;
   }
 
   code {

@@ -24,6 +24,7 @@
     </div>
 
     <div v-if="showTransactions">
+      <hr>
       <h3>Document Transactions</h3>
         <table class="table is-fullwidth">
           <thead>

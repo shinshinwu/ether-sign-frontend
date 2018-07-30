@@ -23,7 +23,7 @@ let getWeb3 = new Promise(function (resolve, reject) {
   } else {
     // web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545')) GANACHE FALLBACK
     // reject(new Error('Unable to connect to Metamask'))
-    var web3js = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/8E1P9LRzpYDwt2FJRtVJ'))
+    var web3js = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/8E1P9LRzpYDwt2FJRtVJ'))
     resolve({
       isInjected: false,
       host: web3js.currentProvider.host,

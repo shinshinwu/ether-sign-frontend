@@ -102,7 +102,10 @@ export default new Vuex.Store({
       commit('registerTransaction', transaction)
     },
     async signDocument({state, commit}, args) {
-      commit('registerTransaction', await signDocument(state, args))
+      let doc = await signDocument(state, args)
+      let payload = Object.assign({}, doc, { additionalSigners: [] })
+
+      commit('registerDocument', payload)
     },
     async getUserEvents({state, commit}) {
       commit('registerTransaction', await getUserEvents(state))

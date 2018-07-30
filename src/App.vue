@@ -36,8 +36,6 @@
               <span>Create Doc</span>
             </router-link>
 
-            <router-link to="/compress-document" class="navbar-item">Compress Doc</router-link>
-
             <a class="navbar-item" href="#">
               <span class="icon has-text-warning">
                 <b-icon icon="crown" size="is-small"></b-icon>

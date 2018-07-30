@@ -1,22 +1,27 @@
 <template>
-  <div class="columns">
-    <div class="column">
-      <div v-if="contractLoaded" class="content">
-        <div v-if="hasInput">
-          <h3 class="has-text-primary">Decompressed Output</h3>
-          <div class="output" v-html="decompressedOutput"></div>
+  <section class="section">
+    <div class="container">
+      <div class="content">
+        <div v-if="contractLoaded" class="content">
+          <div v-if="hasInput">
+            <h1>View Document</h1>
 
-          <Signer v-if="existingDoc" />
+            <a href="/#/create-document">Create New Document</a>
+
+            <div class="output" v-html="decompressedOutput"></div>
+
+            <Signer v-if="existingDoc" />
+          </div>
         </div>
-      </div>
 
-      <div v-else class="content">
-        <h3>Loading...</h3>
-      </div>
+        <div v-else class="content">
+          <h3>Loading...</h3>
+        </div>
 
-      <div v-if="documentError" class="content"><h3 class="has-text-danger">Document Does not exist!</h3></div>
+        <div v-if="documentError" class="content"><h3 class="has-text-danger">Document Does not exist!</h3></div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -90,13 +95,9 @@ export default {
 </script>
 
 <style scoped>
-  h3 {
-    margin: 30px 0;
-  }
-
   .output {
     padding: 30px 50px;
     border: 1px dashed #b7b7b7;
-    margin-bottom: 50px;
+    margin: 30px 0;
   }
 </style>

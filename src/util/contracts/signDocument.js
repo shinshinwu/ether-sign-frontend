@@ -5,8 +5,7 @@ const signDocument = (state, args) => {
       args.title, args.content, args.signer
     ).send({from: state.web3.coinbase}
     ).on('receipt', (receipt) => {
-      console.log('received the tx receipt')
-      resolve(receipt)
+      resolve(receipt.events.DocumentSigned)
     })
   });
 };
