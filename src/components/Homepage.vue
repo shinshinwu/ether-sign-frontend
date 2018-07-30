@@ -156,7 +156,7 @@
             </div>
             <div class="column">
               <img class="img-center" src="http://demo.themenio.com/ico/images/lavender-icon-d.png" alt="Placeholder image">
-              <h4 class="title">Transparent</h4>
+              <h4 class="title">Highly Accessible</h4>
               <p>Set delegate to sign quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.</p>
             </div>
           </div>
