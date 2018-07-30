@@ -1,50 +1,52 @@
 <template>
-  <div class="container">
-    <p>Coinbase: {{ this.$store.state.web3.coinbase }}</p>
-    <p v-if="hasDelegate">
-      My Delegate Address: {{ delegateAddress }}
-      <button class="button is-danger" @click="removeDelegate">Remove Delegate</button>
-    </p>
-    <p v-if="isDelegateFor">I am delegates for {{ delegatesFor }}</p>
-    <div class="field">
-      <label class="label">Set Delegate</label>
-      <div class="control">
-        <input class="input" type="text" v-model="newDelegate" placeholder="New Delegate Address">
+  <section class="section">
+    <div class="container">
+      <p>Coinbase: {{ this.$store.state.web3.coinbase }}</p>
+      <p v-if="hasDelegate">
+        My Delegate Address: {{ delegateAddress }}
+        <button class="button is-danger" @click="removeDelegate">Remove Delegate</button>
+      </p>
+      <p v-if="isDelegateFor">I am delegates for {{ delegatesFor }}</p>
+      <div class="field">
+        <label class="label">Set Delegate</label>
+        <div class="control">
+          <input class="input" type="text" v-model="newDelegate" placeholder="New Delegate Address">
+        </div>
       </div>
+
+      <div class="field">
+        <div class="control">
+          <button class="button is-link" @click="setDelegate(newDelegate)">Submit</button>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="field has-addons">
+        <div class="control">
+          <input class="input" type="text" v-model="inputAddress" placeholder="Enter ETH Address">
+        </div>
+        <div class="control">
+          <a class="button is-info" @click="getDelegate">Lookup Delegate</a>
+        </div>
+      </div>
+      <p>Fetched Delegate Address: {{ fetchedDelegate }}</p>
+
+      <div class="content"><h3 style="margin-top:50px;">User Transactions</h3></div>
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Block #</th>
+            <th>Event</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody v-if="hasTransactions">
+          <TransactionFeed v-for="transaction in this.$store.state.transactions" :transaction="transaction" :key="transaction.id" />
+        </tbody>
+      </table>
     </div>
-
-    <div class="field">
-      <div class="control">
-        <button class="button is-link" @click="setDelegate(newDelegate)">Submit</button>
-      </div>
-    </div>
-
-    <br />
-
-    <div class="field has-addons">
-      <div class="control">
-        <input class="input" type="text" v-model="inputAddress" placeholder="Enter ETH Address">
-      </div>
-      <div class="control">
-        <a class="button is-info" @click="getDelegate">Lookup Delegate</a>
-      </div>
-    </div>
-    <p>Fetched Delegate Address: {{ fetchedDelegate }}</p>
-
-    <div class="content"><h3 style="margin-top:50px;">User Transactions</h3></div>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Block #</th>
-          <th>Event</th>
-          <th>Detail</th>
-        </tr>
-      </thead>
-      <tbody v-if="hasTransactions">
-        <TransactionFeed v-for="transaction in this.$store.state.transactions" :transaction="transaction" :key="transaction.id" />
-      </tbody>
-    </table>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -132,6 +134,12 @@ export default {
       'setDelegate',
       'removeDelegate'
     ]),
+  },
+
+
+  mounted() {
+    this.$parent.navClass = 'navbar is-spaced has-shadow'
+    this.$parent.logoSrc = '/static/etherSignText.svg'
   }
 }
 </script>

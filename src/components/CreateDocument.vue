@@ -1,55 +1,59 @@
 <template>
-  <div class="columns">
-    <div class="column">
-
+  <section class="section">
+    <div class="container">
       <div class="columns">
         <div class="column">
-          <div class="control" id="editor">
-            <textarea v-model="uncompressedInput" class="textarea" placeholder="markdown format"></textarea>
-          </div>
-        </div>
 
-        <div class="column">
-          <div class="content">
-            <div v-html="compiledMarkdown"></div>
-          </div>
-        </div>
-      </div>
+          <div class="columns">
+            <div class="column">
+              <div class="control" id="editor">
+                <textarea v-model="uncompressedInput" class="textarea" placeholder="markdown format"></textarea>
+              </div>
+            </div>
 
-      <button class="button is-link" @click="compressInput">Generate Share URL</button>
-
-      <div class="content url-output">
-        <h3>Share URL Output</h3>
-        <blockquote style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ this.compressedOutput }}</blockquote>
-        <a :href="compressedURL" target="_blank" style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ compressedURL }}</a>
-      </div>
-
-      <div class="content"><h3>Document Signing</h3></div>
-
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label">Document Title</label>
-            <div class="control">
-              <input class="input" type="text" v-model="title" placeholder="Document Title">
+            <div class="column">
+              <div class="content">
+                <div v-html="compiledMarkdown"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="column">
-          <div class="field">
-            <label class="label">Signer Address</label>
-            <div class="control">
-              <input class="input" type="text" v-model="signerAddress" placeholder="Enter Signer ETH Address">
+          <button class="button is-link" @click="compressInput">Generate Share URL</button>
+
+          <div class="content url-output">
+            <h3>Share URL Output</h3>
+            <blockquote style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ this.compressedOutput }}</blockquote>
+            <a :href="compressedURL" target="_blank" style="overflow-wrap:break-word;word-wrap:break-word;word-break:break-word;">{{ compressedURL }}</a>
+          </div>
+
+          <div class="content"><h3>Document Signing</h3></div>
+
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Document Title</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="title" placeholder="Document Title">
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="field">
+                <label class="label">Signer Address</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="signerAddress" placeholder="Enter Signer ETH Address">
+                </div>
+              </div>
             </div>
           </div>
+
+          <button class="button is-info" @click="signDoc">Sign Doc</button>
+
         </div>
       </div>
-
-      <button class="button is-info" @click="signDoc">Sign Doc</button>
-
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
