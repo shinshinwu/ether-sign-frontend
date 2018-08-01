@@ -3,7 +3,13 @@
     <h3>Signatures</h3>
     <p>This document has been signed by {{ signers }}</p>
 
-    <div v-if="signingEligible">
+    <div v-if="transactionPending" class="content has-text-centered">
+      <img src="/static/cutie-fox-spinner.svg" alt="loading transaction" class="img-center">
+      <p class="has-text-warning has-text-weight-bold" style="margin-top:20px">Your transaction is being processed right now! Once it has been mined, the updates will be reflected here.</p>
+    </div>
+
+    <div v-else-if="signingEligible">
+      <hr>
       <h3>Add Your Signature</h3>
       <div class="columns">
         <div class="column">
@@ -16,7 +22,7 @@
         <div class="column">
           <div class="field">
             <div class="control">
-              <button class="button is-link" @click="addSigner(signerAddress)">Add Your Signature</button>
+              <button class="button is-link" @click="addSigner">Add Your Signature</button>
             </div>
           </div>
         </div>
@@ -47,14 +53,14 @@
 
 <script>
 import TransactionFeed from './TransactionFeed.vue'
-import { mapActions } from 'vuex'
 
 export default {
   name: 'Signer',
   components: { TransactionFeed },
   data () {
     return {
-      signerAddress: this.$store.state.web3.coinbase
+      signerAddress: this.$store.state.web3.coinbase,
+      addedSignature: false
     }
   },
 
@@ -79,11 +85,22 @@ export default {
 
     showTransactions() {
       return (this.$store.state.document !== null)
+    },
+
+    transactionPending() {
+      if (this.addedSignature && this.signingEligible) {
+        return true
+      } else {
+        return false
+      }
     }
   },
 
   methods: {
-    ...mapActions(['addSigner'])
+    addSigner() {
+      this.$store.dispatch('addSigner', this.signerAddress)
+      this.addedSignature = true
+    }
   }
 
 }

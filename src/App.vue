@@ -36,19 +36,19 @@
               <span>Create Doc</span>
             </router-link>
 
-            <a class="navbar-item" href="#">
+            <router-link to="/about" class="navbar-item">
               <span class="icon has-text-warning">
                 <b-icon icon="crown" size="is-small"></b-icon>
               </span>
               <span>About</span>
-            </a>
+            </router-link>
           </div>
 
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="field is-grouped">
                 <p class="control">
-                  <a class="bd-tw-button button twitter-btn" data-social-network="Twitter" data-social-action="tweet" data-social-target="http://localhost:4000" target="_blank" href="https://twitter.com/intent/tweet?text=Bulma: a modern CSS framework based on Flexbox&amp;hashtags=bulmaio&amp;url=http://localhost:4000&amp;via=jgthms">
+                  <a class="bd-tw-button button twitter-btn" data-social-network="Twitter" data-social-action="tweet" data-social-target="http://localhost:4000" target="_blank" href="https://twitter.com/intent/tweet?text=EtherSign is the modern document signing technology for the blockchain&amp;hashtags=EtherSign&amp;url=https://ethersign.surge.sh&amp;via=cakeisnotreal">
                     <b-icon icon="twitter"></b-icon>
                     <span>
                       Tweet
@@ -69,6 +69,20 @@
     </nav>
 
     <router-view></router-view>
+
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>EtherSign</strong> by <a href="https://github.com/shinshinwu" target="_blank">Anna Wu</a>. The source code is licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+        </p>
+        <p>
+          <a href="https://bulma.io">
+            <img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+          </a>
+        </p>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -86,14 +100,6 @@ export default {
   beforeCreate () {
     this.$store.dispatch('registerWeb3').then(() => {
       this.$store.dispatch('getContractInstance')
-    }).then(() => {
-      if (this.$store.state.web3.isInjected && this.$store.state.web3.coinbase) {
-      this.$store.dispatch('getDelegate')
-      }
-    }).then(() => {
-      if (this.$store.state.web3.isInjected && this.$store.state.web3.coinbase) {
-        this.$store.dispatch('getUserEvents')
-      }
     }).then(() => {
       this.loading = false
     })

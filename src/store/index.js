@@ -24,7 +24,8 @@ export default new Vuex.Store({
     delegateAddress: null,
     contractInstance: null,
     document: null,
-    transactions: []
+    transactions: [],
+    pendingUpdates: false
   },
   mutations: {
     registerWeb3Instance (state, payload) {

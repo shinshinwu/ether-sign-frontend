@@ -4,7 +4,7 @@ import Homepage from '@/components/Homepage'
 import Profile from '@/components/Profile'
 import CreateDocument from '@/components/CreateDocument'
 import ViewDocument from '@/components/ViewDocument'
-import CompressDocument from '@/components/CompressDocument'
+import About from '@/components/About'
 
 Vue.use(Router)
 
@@ -31,9 +31,9 @@ export default new Router({
       component: ViewDocument
     },
     {
-      path: '/compress-document',
-      name: 'CompressDocument',
-      component: CompressDocument
+      path: '/about',
+      name: 'About',
+      component: About
     }
   ]
 })

@@ -3,6 +3,7 @@ const removeDelegate = (state) => {
     state.contractInstance().methods.deauthorize().send({from: state.web3.coinbase}
     ).on('receipt', (receipt) => {
       console.log('received the tx receipt')
+      state.pendingUpdates = false
       resolve(receipt.events.Deauthorized)
     })
   });

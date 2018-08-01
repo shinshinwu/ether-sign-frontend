@@ -7,6 +7,7 @@
           <div v-if="hasInput">
             <h1>View Document</h1>
 
+            <hr>
             <a href="/#/create-document">Create New Document</a>
 
             <div class="output" v-html="decompressedOutput"></div>
@@ -76,7 +77,6 @@ export default {
         hash = decodeURIComponent(params.get('c')).split(' ').join('+')
       }
 
-      console.log('parsed hash is ', hash)
       var raw = atob(hash)
       var rawLength = raw.length
       var array = new Uint8Array(new ArrayBuffer(rawLength))
@@ -92,6 +92,11 @@ export default {
         this.hasInput = true
       });
     }
+  },
+
+  mounted() {
+    this.$parent.navClass = 'navbar is-spaced has-shadow'
+    this.$parent.logoSrc = '/static/etherSignText.svg'
   }
 }
 </script>
@@ -100,6 +105,6 @@ export default {
   .output {
     padding: 30px 50px;
     border: 1px dashed #b7b7b7;
-    margin: 30px 0;
+    margin: 30px 0 50px;
   }
 </style>

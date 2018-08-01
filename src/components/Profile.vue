@@ -3,10 +3,11 @@
     <div v-if="userSignedIn" class="container">
       <div class="content">
         <h1>Profile</h1>
+        <hr>
         <p>My Account Address: {{ this.$store.state.web3.coinbase }}</p>
         <p v-if="hasDelegate">
-          My Delegate Address: {{ delegateAddress }}
-          <button class="button is-danger" @click="removeDelegate">Remove Delegate</button>
+          <span>My Delegate Address: {{ delegateAddress }}</span>
+          <span><button class="align-button button is-danger is-small is-outlined" @click="removeDelegate">Remove Delegate</button></span>
         </p>
         <p v-if="isDelegateFor">I am delegates for address(s) {{ delegatesFor }}</p>
 
@@ -21,8 +22,11 @@
               <button class="button is-link" @click="setDelegate(newDelegate)">Submit</button>
             </div>
           </div>
-          <div class="control">
-          </div>
+        </div>
+
+        <div v-if="this.$store.state.pendingUpdates" class="content has-text-primary">
+          <img src="/static/transaction-loading.svg" alt="loading">
+          <p class="has-text-warning has-text-weight-bold">Updating Delegates.....</p>
         </div>
       </div>
 
@@ -58,7 +62,7 @@
 
 <script>
 import TransactionFeed from './TransactionFeed.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Profile',
@@ -141,16 +145,28 @@ export default {
     async getDelegate () {
       this.fetchedDelegate = await this.$store.dispatch('getDelegate', this.inputAddress)
     },
-    ...mapActions([
-      'setDelegate',
-      'removeDelegate'
-    ]),
+
+    setDelegate () {
+      this.$store.dispatch('setDelegate')
+      this.$store.state.pendingUpdates = true
+    },
+
+    removeDelegate () {
+      this.$store.dispatch('removeDelegate')
+      this.$store.state.pendingUpdates = true
+    }
   },
 
 
   mounted() {
     this.$parent.navClass = 'navbar is-spaced has-shadow'
     this.$parent.logoSrc = '/static/etherSignText.svg'
+
+    this.$store.state.transactions = []
+    if (this.$store.state.web3.isInjected && this.$store.state.web3.coinbase) {
+      this.$store.dispatch('getDelegate')
+      this.$store.dispatch('getUserEvents')
+    }
   }
 }
 </script>

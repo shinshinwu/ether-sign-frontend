@@ -1,5 +1,5 @@
 /*Navbar style*/
-.navbar .navbar-burger {
+.navbar.is-primary .navbar-burger {
   color: #fff;
 }
 .navbar-end .button {
@@ -42,13 +42,14 @@ a.navbar-item.logo-img img {
   background-color: #1b95e0;
 }
 
-.mdi-rocket.mdi-24px.mdi:before {
+.navbar .mdi-rocket.mdi-24px.mdi:before {
   font-size:22px;
+  color: #1da1f2;
 }
 
 /*Homepage style*/
 .medium-spacing {
-  padding: 5rem 0;
+  padding: 5rem 1rem;
 }
 
 .medium-spacing-top {
@@ -59,6 +60,11 @@ a.navbar-item.logo-img img {
   .hero.is-medium .hero-body {
     padding-top: 5rem;
     padding-bottom:7rem;
+  }
+
+  .button.align-button {
+    margin-top: -5px;
+    margin-left: 10px;
   }
 }
 
@@ -138,6 +144,10 @@ section.hero {
   margin: 0 auto;
 }
 
+.features img {
+  min-width: 150px;
+}
+
 .content h4.title {
   font-size: 1.7em;
   margin-top: 1.7rem;
@@ -149,4 +159,8 @@ section.features .column {
 
 .container.login-alert {
   margin-bottom: 50px;
+}
+
+footer.footer {
+  padding: 2rem;
 }

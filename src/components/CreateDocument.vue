@@ -4,7 +4,7 @@
     <div class="container">
       <div class="content">
         <h1>Create Document</h1>
-        <p>You can create document in the gray input box below. All of the document follow the <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown</a> styling rules so add your sparks! You can preview your document on the right side panel.</p>
+        <p>You can create your document in the gray input box below. The document styling follows the <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown</a> styling rules so feel free to add your sparks! You can preview your document on the right side panel.</p>
         <hr>
         <div class="columns">
           <div class="column">
@@ -36,35 +36,44 @@
           </div>
         </div>
         <hr>
-        <div class="content"><h3>Document Signing</h3></div>
 
-        <div class="columns">
-          <div class="column">
-            <div class="field">
-              <label class="label">Document Title</label>
-              <div class="control">
-                <input class="input" type="text" v-model="title" placeholder="What is the title for your doc?">
-              </div>
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="field">
-              <label class="label">Signer Address</label>
-              <div class="control">
-                <input class="input" type="text" v-model="signerAddress" placeholder="ETH Address of your own or a person you have delegate power for">
-              </div>
-            </div>
-          </div>
+        <div v-if="transactionPending" class="content has-text-centered">
+          <img src="/static/cutie-fox-spinner.svg" alt="loading transaction" class="img-center">
+          <p class="has-text-warning has-text-weight-bold" style="margin-top:20px">Your transaction is being processed right now! Once it has been mined, the updates will be reflected here.</p>
         </div>
 
-        <button v-if="userSignedIn" class="button is-danger is-outlined" @click="signDoc">Create & Sign Document</button>
+        <div v-else>
+          <div v-if="hasDoc">
+            <Signer />
+          </div>
 
-        <button v-else class="button is-danger is-outlined" @click="showLoginPrompt">Create & Sign Document</button>
+          <div v-else class="content">
+            <h3>Document Signing</h3>
 
-        <div v-if="hasDoc">
-          <hr>
-          <Signer />
+            <div class="columns">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Document Title</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="title" placeholder="What is the title for your doc?">
+                  </div>
+                </div>
+              </div>
+
+              <div class="column">
+                <div class="field">
+                  <label class="label">Signer Address</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="signerAddress" placeholder="ETH Address of your own or a person you have delegate power for">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button v-if="userSignedIn" class="button is-danger is-outlined" @click="signDoc">Create & Sign Document</button>
+
+            <button v-else class="button is-danger is-outlined" @click="showLoginPrompt">Create & Sign Document</button>
+          </div>
         </div>
 
       </div>
@@ -86,7 +95,8 @@ export default {
       signerAddress: null,
       uncompressedInput: `# Hello there!
 ![](https://loading.io/spinners/spookyghost/index.spooky-ghost-ajax-preloader.svg)`,
-      compressedOutput: null
+      compressedOutput: null,
+      submittedDoc: false
     }
   },
 
@@ -106,6 +116,14 @@ export default {
     userSignedIn() {
       return (this.$store.state.web3.isInjected && (this.$store.state.web3.networkId == 4) && this.$store.state.web3.coinbase)
     },
+
+    transactionPending() {
+      if (this.submittedDoc && !this.hasDoc) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
 
   methods: {
@@ -128,22 +146,25 @@ export default {
 
         var args = {title: this.title, content: base64String, signer: this.signerAddress}
         this.$store.dispatch('signDocument', args)
+        this.submittedDoc = true
       })
     },
 
     showLoginPrompt() {
-        this.$dialog.alert({
-            title: 'Whoops',
-            message: 'To create and/or sign document with EtherSign, you would need to first sign into your <b>Rinkeby</b> Ethereum account using apps such as <a href="https://metamask.io/" target="_blank">Metamask</a>.',
-            confirmText: 'Okay',
-            type: 'is-danger',
-            hasIcon: true
-        })
+      this.$dialog.alert({
+          title: 'Whoops',
+          message: 'To create and/or sign document with EtherSign, you would need to first sign into your <b>Rinkeby</b> Ethereum account using apps such as <a href="https://metamask.io/" target="_blank">Metamask</a>.',
+          confirmText: 'Okay',
+          type: 'is-danger',
+          hasIcon: true
+      })
     }
   },
 
   mounted() {
     this.$store.state.document = null
+    this.$parent.navClass = 'navbar is-spaced has-shadow'
+    this.$parent.logoSrc = '/static/etherSignText.svg'
   }
 }
 </script>

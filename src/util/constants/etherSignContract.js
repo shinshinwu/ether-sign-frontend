@@ -2,7 +2,7 @@
 // const address = '0x704448aaff62c1ae2665cafbb641b5826672168d';
 
 // rinkeby contract address
-const address = '0xbd66b6f18c8d66545a83a49dfe356a2367c8c0bf';
+const address = '0xffbed5d4c0798d672b641da273af9e6e834be4b8';
 // acct1 = '0xE6556AF1850920db97BC8dc556A6F5fC0CA98344'
 // acct2 = '0xE776A0855B7AE9e1bf8EF79551596070129923E7'
 // acct3 = '0xdddD0dB8C741d9764D0eB18152340f3Feb618cC0'
