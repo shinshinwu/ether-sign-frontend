@@ -1,5 +1,6 @@
 <template>
   <section class="section">
+    <LoginAlert />
     <div class="container">
       <div class="content">
         <h1>Create Document</h1>
@@ -57,7 +58,9 @@
           </div>
         </div>
 
-        <button class="button is-danger is-outlined" @click="signDoc">Create & Sign Document</button>
+        <button v-if="userSignedIn" class="button is-danger is-outlined" @click="signDoc">Create & Sign Document</button>
+
+        <button v-else class="button is-danger is-outlined" @click="showLoginPrompt">Create & Sign Document</button>
 
         <div v-if="hasDoc">
           <hr>
@@ -71,11 +74,12 @@
 
 <script>
 import Signer from './Signer.vue'
+import LoginAlert from './LoginAlert.vue'
 import marked from 'marked'
 
 export default {
   name: 'CreateDocument',
-  components: { Signer },
+  components: { Signer, LoginAlert },
   data () {
     return {
       title: null,
@@ -97,7 +101,11 @@ export default {
 
     hasDoc() {
       return (this.$store.state.document !== null)
-    }
+    },
+
+    userSignedIn() {
+      return (this.$store.state.web3.isInjected && (this.$store.state.web3.networkId == 4) && this.$store.state.web3.coinbase)
+    },
   },
 
   methods: {
@@ -121,6 +129,16 @@ export default {
         var args = {title: this.title, content: base64String, signer: this.signerAddress}
         this.$store.dispatch('signDocument', args)
       })
+    },
+
+    showLoginPrompt() {
+        this.$dialog.alert({
+            title: 'Whoops',
+            message: 'To create and/or sign document with EtherSign, you would need to first sign into your <b>Rinkeby</b> Ethereum account using apps such as <a href="https://metamask.io/" target="_blank">Metamask</a>.',
+            confirmText: 'Okay',
+            type: 'is-danger',
+            hasIcon: true
+        })
     }
   },
 

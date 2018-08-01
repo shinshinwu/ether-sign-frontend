@@ -1,5 +1,6 @@
 <template>
   <section class="section">
+    <LoginAlert />
     <div class="container">
       <div class="content">
         <div v-if="contractLoaded" class="content">
@@ -18,7 +19,7 @@
           <h3>Loading...</h3>
         </div>
 
-        <div v-if="documentError" class="content"><h3 class="has-text-danger">Document Does not exist!</h3></div>
+        <div v-if="documentError" class="content"><h3 class="has-text-danger">Sorry, document does not exist!</h3></div>
       </div>
     </div>
   </section>
@@ -26,10 +27,11 @@
 
 <script>
 import Signer from './Signer.vue'
+import LoginAlert from './LoginAlert.vue'
 
 export default {
   name: 'ViewDocument',
-  components: { Signer },
+  components: { Signer, LoginAlert },
   data () {
     return {
       existingDoc: false,

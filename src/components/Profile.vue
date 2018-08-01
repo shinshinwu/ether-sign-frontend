@@ -49,7 +49,7 @@
           <p>Whoops</p>
         </div>
         <div class="message-body">
-          To retrieve your profile details, you would need to sign into your ethereum account using apps such as <a href="https://metamask.io/" target="_blank">Metamask</a> first!
+          To retrieve your profile details, you would need to sign into your Rinkeby Ethereum account using apps such as <a href="https://metamask.io/" target="_blank">Metamask</a> first!
         </div>
       </article>
     </div>
@@ -78,7 +78,7 @@ export default {
     },
 
     userSignedIn() {
-      return (this.$store.state.web3.coinbase !== 'N/A')
+      return (this.$store.state.web3.isInjected && (this.$store.state.web3.networkId == 4) && this.$store.state.web3.coinbase)
     },
 
     delegatesFor() {

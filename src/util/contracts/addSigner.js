@@ -1,5 +1,4 @@
 const addSigner = (state, signer) => {
-  debugger
   return new Promise((resolve, reject) => {
     // addSigner(uint _documentId, address _signer)
     state.contractInstance().methods.addSigner(state.document.returnValues.documentId, signer).send({from: state.web3.coinbase}

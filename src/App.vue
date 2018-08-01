@@ -87,9 +87,13 @@ export default {
     this.$store.dispatch('registerWeb3').then(() => {
       this.$store.dispatch('getContractInstance')
     }).then(() => {
+      if (this.$store.state.web3.isInjected && this.$store.state.web3.coinbase) {
       this.$store.dispatch('getDelegate')
+      }
     }).then(() => {
-      this.$store.dispatch('getUserEvents')
+      if (this.$store.state.web3.isInjected && this.$store.state.web3.coinbase) {
+        this.$store.dispatch('getUserEvents')
+      }
     }).then(() => {
       this.loading = false
     })

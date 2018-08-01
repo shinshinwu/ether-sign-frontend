@@ -5,7 +5,6 @@ import Web3 from 'web3'
 * 2. If metamask/mist create a new web3 instance and pass on result
 * 3. Get networkId - Now we can check the user is connected to the right network to use our dApp
 * 4. Get user account from metamask
-* 5. Get user balance
 */
 
 let getWeb3 = new Promise(function (resolve, reject) {
@@ -42,6 +41,19 @@ let getWeb3 = new Promise(function (resolve, reject) {
           reject(new Error('Unable to retrieve network ID'))
         } else {
           // Assign the networkId property to our result and resolve promise
+          // if it's not on rinkeby, we need to use infura to fetch details
+          if (networkId !== 4) {
+            var web3js = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/8E1P9LRzpYDwt2FJRtVJ'))
+
+            result = {
+              isInjected: false,
+              host: web3js.currentProvider.host,
+              web3Instance () {
+                return web3js
+              }
+            }
+          }
+
           result = Object.assign({}, result, {networkId})
           resolve(result)
         }
@@ -61,26 +73,7 @@ let getWeb3 = new Promise(function (resolve, reject) {
           }
         })
       } else {
-        result = Object.assign({}, result , { coinbase: 'N/A' })
-        resolve(result)
-      }
-    })
-  })
-  .then(result => {
-    return new Promise(function (resolve, reject) {
-      if (result.isInjected) {
-        // Retrieve balance for coinbase
-        result.web3Instance().eth.getBalance(result.coinbase, (err, balance) => {
-          if (err) {
-            reject(new Error('Unable to retrieve balance for address: ' + result.coinbase))
-          } else {
-            let parsedBalance = parseInt(result.balance, 10)
-            result = Object.assign({}, result, { balance })
-            resolve(result)
-          }
-        })
-      } else {
-        result = Object.assign({}, result, { balance: 0 })
+        result = Object.assign({}, result , { coinbase: null })
         resolve(result)
       }
     })

@@ -68,13 +68,15 @@ export default {
 
       return (signers.join(', '))
     },
+
     signingEligible() {
-      if (typeof this.$store.state.web3.coinbase == 'undefined') {
+      if (this.$store.state.web3.coinbase == null) {
         return false
       } else {
         return (this.signers.indexOf(this.$store.state.web3.coinbase.toLowerCase()) == -1)
       }
     },
+
     showTransactions() {
       return (this.$store.state.document !== null)
     }

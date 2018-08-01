@@ -146,3 +146,7 @@ section.hero {
 section.features .column {
   padding: 1rem;
 }
+
+.container.login-alert {
+  margin-bottom: 50px;
+}
